@@ -19,6 +19,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.example.demo.dao.StockDao;
 import com.example.demo.entity.Stock;
+import com.example.demo.entity.StockAnalyze;
 import com.example.demo.util.HttpRestUtil;
 
 @Controller
@@ -85,4 +86,16 @@ public class StockController {
 
 		return map;
 	}
+	
+	
+	@RequestMapping("/findStockAnalyze")
+	@ResponseBody
+	private Object findStockAnalyze(String stockId) {
+
+
+		StockAnalyze stockAnalyze = stockDao.findStockAnalyze(stockId);
+
+		return stockAnalyze;
+	}
+	
 }

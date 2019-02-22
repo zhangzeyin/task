@@ -5,17 +5,38 @@
 <title>Insert title here</title>
 </head>
 <body>
-test
+	<center>
+		<table border = "1px" width="70%">
+		<tr><th>股票名称</th><td id ="name"></td></tr>
+		<tr><th>均价</th><td id ="avg"></td></tr>
+		<tr><th>历史最高价</th><td id ="max"></td></tr>
+		<tr><th>历史最低价</th><td id ="min"></td></tr>
+		
+		</table>
+		<table border = "1px" width="70%" id="years"></table>
+	</center>
 </body>
 </html>
 <script src="/js/jquery.js"></script>
 <script src="/js/getUrl.js"></script>
 <script>
+var stockId = $.getUrlParam('stockId')
 
+$.ajax({
+	  url:"/findStockAnalyze?stockId="+stockId,
+		async:false,
+		success: function(data){
+		$("#name").text(data.stockName)
+		$("#max").text(data.max)
+		$("#min").text(data.min)
+		$("#avg").text(data.avg)
+		var html = "<tr><th>年份</th><th>均价</th><th>高价</th><th>低价</th></tr>";
+		for(var i=0;i<data.yearDates.length;i++){
+			html+="<tr><td>"+data.yearDates[i].year+"</td><td>"+data.yearDates[i].yearAvg+"</td><td>"+data.yearDates[i].yearMax+"</td><td>"+data.yearDates[i].yearMin+"</td></tr>";
+		}
+		$("#years").html(html)
+		}
+	
+	})
 
-
-
-
-
-alert($.getUrlParam('stockId'));
 </script>

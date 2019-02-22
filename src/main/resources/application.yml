@@ -4,8 +4,8 @@ server:
 
 
 spring:
-#    profiles:
-#      active: dev
+    profiles:
+      active: @activatedProperties@
 #  redis:
 #    host: localhost
 #    port: 6379
