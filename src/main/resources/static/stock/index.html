@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>股票分析</title>
+<style>
+td{
+border:1px solid #000;
+width:200px
+}
+</style>
+</head>
+<body>
+<center>
+  <input id="keyword" style="width:45%;height:30px" >   <input type = "button" value="搜索" onclick="findkeyword()">
+  <div id="list"></div>
+  </center>
+</body>
+</html>
+<script src="/js/jquery.js"></script>
+<script>
+
+$(document).keydown(function(event){
+	if(event.keyCode == 13){
+			findkeyword();
+		}
+	});
+
+	function findkeyword(){
+		 $.ajax({
+			  url:"/bykeyword?keyword="+$("#keyword").val(),
+				async:false,
+				success: function(data){
+					$("#list").html();
+					if(data.IsSuccess==true&&data.Data!=null){
+						var list = "";
+						for(var i=0;i< data.Data.length;i++){
+							
+							
+							var tab=" <table>"+
+							"<tr><th>"+data.Data[i].Name+"</th></tr>"+
+							"<tr><td>名称</td><td>id</td><td>编码</td><td>操作</td></tr>";
+							
+							for(var j=0;j< data.Data[i].Datas.length;j++){
+								tab+="<tr><td>"+data.Data[i].Datas[j].Name+"</td><td>"+data.Data[i].Datas[j].ID+"</td><td>"+data.Data[i].Datas[j].Code+"</td>"+
+								"<td><button onclick=\"saveDateAll(\'"+data.Data[i].Datas[j].ID+"\',\'"+data.Data[i].Datas[j].Name+"\')\">本地数据存储</button>"+
+								"<button onclick=\"analyzeStock(\'"+data.Data[i].Datas[j].ID+"\')\">数据分析</button>"+
+								"</td></tr>";
+							}
+							
+							tab+="</table>";
+							list+=tab;
+						}
+						$("#list").html(list);
+					}
+				}
+			})
+	
+	}
+	
+	
+	function saveDateAll(id,name){
+		$.ajax({
+			  url:"/findStock?stockid="+id+"&stockName="+name,
+				async:false,
+				success: function(data){
+				alert(data?" 成功":"失败")
+				}
+			})
+		
+		
+	}
+	
+	function analyzeStock(id){
+		
+		window.location.href="/stock/analyzeStock.html?stockId="+id;
+	}
+		
+	
+
+</script>

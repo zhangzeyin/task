@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<link href="/js/My97/skin/WdatePicker.css" rel="stylesheet" type="text/css">
+</head>
+<body>
+	出发地<input id="chenshi1"oninput="findchenshi(1)"/>
+	<input id="chenshicode1" type="hidden"/>
+	目的地<input id="chenshi2"oninput="findchenshi(2)"/>
+	<input id="chenshicode2" type="hidden"/>
+	出发日<input id="time" onclick="WdatePicker({el:this,dateFmt:'yyyy-MM-dd'})" />
+		<input type ="button" onclick="sousuo()"  value="搜索"/>
+	<div id="chenshidiv"></div>
+		<div >
+			<table border="1">
+			<thand>
+			<tr>
+				<td>车次</td>
+				<td>开始时间</td>
+				<td>结束时间</td>
+				<td>时长</td>
+				<td>商务/特等</td>
+				<td>一等座</td>
+				<td>二等座</td>
+				<td>高软</td>
+				<td>软卧</td>
+				<td>动卧</td>
+				<td>硬卧</td>
+				<td>软座</td>
+				<td>硬座</td>
+				<td>无座</td>
+				<td>其他</td>
+				
+			</tr>
+			</thand>
+			<tbody id ="checi">
+			</tbody>
+			
+			</table>
+		</div>
+		
+	</body>
+	
+</html>
+<script src="/js/jquery.js"></script>
+<script src="/js/My97/WdatePicker.js"></script>
+
+<script src="/js/12306chenshi.js"></script>
+<script>
+
+var chenshinames=station_names.split("@")
+
+function findchenshi(sta){
+	
+	
+	var name = $("#chenshi"+sta).val();
+	
+	var chenshidiv ="";
+	
+	for(var i=1;i<chenshinames.length;i++){
+		if(chenshinames[i].indexOf(name)>-1){
+			var namea = chenshinames[i].split("|");
+			//alert(sta)
+			chenshidiv+="<input code='"+namea[2]+"' onclick='upchenshi(this,"+sta+")' type='button' value='"+namea[1]+"'/>"
+		}
+		
+	}
+
+	$("#chenshidiv").html(chenshidiv);
+	
+}
+
+function upchenshi(my,sta){
+	$("#chenshicode"+sta).val($(my).attr("code"))
+	$("#chenshi"+sta).val($(my).val())
+	$("#chenshidiv").html("");	
+}
+function sousuo(){
+	 $("#checi").html(""); 
+	  $.ajax({
+		  url:"/cha?date="+$('#time').val()+"&fromStation="+$('#chenshicode1').val()+"&toStation="+$('#chenshicode2').val(),
+			async:false,
+			success: function(data){
+				 data=JSON.parse(data); 
+				  if(data.httpstatus==200){
+					  var checi = "";
+					  for(var i=0;i<data.data.result.length;i++){
+						  var car =data.data.result[i].split("|")
+						  
+						  checi+="<tr>"+
+						  "<td>"+car[3]+"</td>"+
+						  "<td>"+car[8]+"</td>"+
+						  "<td>"+car[9]+"</td>"+
+						  "<td>"+car[10]+"</td>"+
+						  
+						  "<td>"+car[19]+"</td>"+
+						  "<td>"+car[20]+"</td>"+
+						  "<td>"+car[21]+"</td>"+
+						  "<td>"+car[22]+"</td>"+
+						  "<td>"+car[23]+"</td>"+
+						  "<td>"+car[24]+"</td>"+
+						  "<td>"+car[25]+"</td>"+
+						  "<td>"+car[26]+"</td>"+
+						  "<td>"+car[27]+"</td>"+
+						  "<td>"+car[28]+"</td>"+
+						  "<td>"+car[29]+"</td>" 
+						 
+						  
+						  
+						  if(car[0]==""){
+							  if(car[1]!="预订"){
+								  checi+= "<td>"+car[1]+"</td>"
+							  }else{
+								  checi+= "<td>无票</td>"
+							  }
+							  
+						  }else{
+							 {
+								  checi+= "<td>有票</td>"
+							  }
+							  
+							  
+						  } 
+						  
+						  checi+="</tr>"
+					  }
+					  
+					  
+					 $("#checi").html(checi) 
+					  
+					  
+				  }else{
+					  alert("失败")
+				  } 
+		      }
+			
+	  
+	  
+	  });
+	  //alert(htmlobj)
+	/*   if(htmlobj.httpstatus==200){
+		
+		  alert(htmlobj.result.split("|预订|").length)
+		  
+	  }else{
+		  alert("失败")
+	  } */
+	
+}
+
+</script>
