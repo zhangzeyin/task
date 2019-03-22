@@ -12,6 +12,11 @@ public class StockAnalyze {
 	private Double min;
 	
 	private List<YearDate> yearDates;
+	
+	private String FourYearsAvg;
+	
+	private double closingQuotation; // 收盘
+
 
 	public String getStockName() {
 		return stockName;
@@ -53,20 +58,45 @@ public class StockAnalyze {
 	public void setYearDates(List<YearDate> yearDates) {
 		this.yearDates = yearDates;
 	}
+	
+	
 
+
+	public String getFourYearsAvg() {
+		return FourYearsAvg;
+	}
+
+	public void setFourYearsAvg(String fourYearsAvg) {
+		FourYearsAvg = fourYearsAvg;
+	}
+	
+	
+
+	public double getClosingQuotation() {
+		return closingQuotation;
+	}
+
+	public void setClosingQuotation(double closingQuotation) {
+		this.closingQuotation = closingQuotation;
+	}
 
 	public StockAnalyze() {
 		super();
 	}
 
-	public StockAnalyze(String stockName, Double avg, Double max, Double min, List<YearDate> yearDates) {
+	public StockAnalyze(String stockName, Double avg, Double max, Double min, List<YearDate> yearDates,
+			String fourYearsAvg, double closingQuotation) {
 		super();
 		this.stockName = stockName;
 		this.avg = avg;
 		this.max = max;
 		this.min = min;
 		this.yearDates = yearDates;
+		FourYearsAvg = fourYearsAvg;
+		this.closingQuotation = closingQuotation;
 	}
+
+
 	
 	
 	

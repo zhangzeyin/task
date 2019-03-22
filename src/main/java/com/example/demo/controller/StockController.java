@@ -20,6 +20,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.example.demo.dao.StockDao;
 import com.example.demo.entity.Stock;
 import com.example.demo.entity.StockAnalyze;
+import com.example.demo.entity.YearDate;
 import com.example.demo.util.HttpRestUtil;
 
 @Controller
@@ -94,6 +95,20 @@ public class StockController {
 
 
 		StockAnalyze stockAnalyze = stockDao.findStockAnalyze(stockId);
+		
+		List<YearDate> stockList = stockAnalyze.getYearDates();
+		if(stockList.size()<4 ) {
+			stockAnalyze.setFourYearsAvg("小于4年不计算均价");
+		}else{
+			Double avgs = 0.0;
+			
+    		for (int i = stockList.size()-1; i >stockList.size()-5 ; i--) {
+    			avgs+=stockList.get(i).getYearAvg();
+    		}	
+    		stockAnalyze.setFourYearsAvg((avgs/4)+"");
+		}
+		
+		
 
 		return stockAnalyze;
 	}

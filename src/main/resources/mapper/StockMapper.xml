@@ -7,6 +7,8 @@
 		<result property="avg" column="avg" />
 		<result property="max" column="max" />
 		<result property="min" column="min" />
+		<result property="closingQuotation" column="closing_quotation" />
+		
 		<collection property="yearDates" ofType="com.example.demo.entity.YearDate">
 			<result property="year" column="years" />
 			<result property="yearAvg" column="yearAvg" />
@@ -35,6 +37,7 @@
 
 	<select id="findStockAnalyze" resultMap="resultMap" parameterType="java.lang.String">
 
+		
 		select 
 				*
 			from 
@@ -58,7 +61,7 @@
 					WHERE
 						stock_Id = #{stockId}
 						GROUP BY years
-				) a
+				) a ,(select closing_quotation from stock where id = (select max(id) from stock WHERE stock_Id = #{stockId})) c
 
 	</select>
 	

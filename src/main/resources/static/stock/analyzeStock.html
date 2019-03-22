@@ -9,9 +9,11 @@
 		<table border = "1px" width="70%">
 		<tr><th>股票名称</th><td id ="name"></td></tr>
 		<tr><th>均价</th><td id ="avg"></td></tr>
+		<tr><th>4年均价</th><td id ="fourYearsAvg"></td></tr>
+		<tr><th>上市时长</th><td id ="yearsLen"></td></tr>
+		<tr><th>收盘价</th><td id ="closingQuotation"></td></tr>
 		<tr><th>历史最高价</th><td id ="max"></td></tr>
 		<tr><th>历史最低价</th><td id ="min"></td></tr>
-		
 		</table>
 		<table border = "1px" width="70%" id="years"></table>
 	</center>
@@ -30,6 +32,10 @@ $.ajax({
 		$("#max").text(data.max)
 		$("#min").text(data.min)
 		$("#avg").text(data.avg)
+		$("#fourYearsAvg").text(data.fourYearsAvg)
+		$("#yearsLen").text(data.yearDates.length)
+		$("#closingQuotation").text(data.closingQuotation)
+		
 		var html = "<tr><th>年份</th><th>均价</th><th>高价</th><th>低价</th></tr>";
 		for(var i=0;i<data.yearDates.length;i++){
 			html+="<tr><td>"+data.yearDates[i].year+"</td><td>"+data.yearDates[i].yearAvg+"</td><td>"+data.yearDates[i].yearMax+"</td><td>"+data.yearDates[i].yearMin+"</td></tr>";
