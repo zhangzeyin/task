@@ -13,4 +13,7 @@ public interface StockDao {
 	
 	StockAnalyze findStockAnalyze(String stockId);
 
+
+	List<StockAnalyze> findAll();
+
 }

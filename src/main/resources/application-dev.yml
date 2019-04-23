@@ -27,7 +27,9 @@ spring:
 activiti:
       database-schema-update: true
       check-process-definitions: false
-      
+logging:
+  level:
+    root: info
 mybatis:
   typeAliasesPackage: com.example.demo.entity
   mapperLocations: classpath:mapper/*.xml
