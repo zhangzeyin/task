@@ -47,13 +47,9 @@ public class DemoApplication {
 	@RequestMapping("/cha")
 	@ResponseBody
 	private String  cha(String date,String fromStation,String toStation) throws IOException{
-        //api url地址
 		String url = "https://kyfw.12306.cn/otn/leftTicket/queryZ?leftTicketDTO.train_date="+date+"&leftTicketDTO.from_station="+fromStation+"&leftTicketDTO.to_station="+toStation+"&purpose_codes=ADULT";
-        //post请求
         HttpMethod method =HttpMethod.GET;
-        // 封装参数，千万不要替换为Map与HashMap，否则参数无法传递
         MultiValueMap<String, String> params= new LinkedMultiValueMap<String, String>();
-        //发送http请求并返回结果
         String result = HttpRestUtil.HttpRestClient(url,method,params);
         return result;
 	}

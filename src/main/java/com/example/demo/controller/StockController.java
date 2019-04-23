@@ -1,5 +1,6 @@
 package com.example.demo.controller;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -7,6 +8,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Controller;
@@ -22,16 +27,19 @@ import com.example.demo.entity.Stock;
 import com.example.demo.entity.StockAnalyze;
 import com.example.demo.entity.YearDate;
 import com.example.demo.util.HttpRestUtil;
+import com.example.demo.util.MyThread;
 
 @Controller
 public class StockController {
+
+	private static final String FIND_STOCK = "/findStock";
 
 	@Autowired
 	private StockDao stockDao;
 	
 	private SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
-	@RequestMapping("/findStock")
+	@RequestMapping(FIND_STOCK)
 	@ResponseBody
 	private boolean findStock(String stockid, String stockName)
 			throws IOException, NumberFormatException, ParseException {
@@ -97,6 +105,7 @@ public class StockController {
 		StockAnalyze stockAnalyze = stockDao.findStockAnalyze(stockId);
 		
 		List<YearDate> stockList = stockAnalyze.getYearDates();
+	
 		if(stockList.size()<4 ) {
 			stockAnalyze.setFourYearsAvg("小于4年不计算均价");
 		}else{
@@ -112,5 +121,63 @@ public class StockController {
 
 		return stockAnalyze;
 	}
+	
+	
+	@RequestMapping("/test")
+	@ResponseBody
+	private Object test(HttpServletResponse response) throws Exception {
+
+		String fileName = "Excel2.xlsx"; 
+		
+		XSSFWorkbook  wb =new XSSFWorkbook ();
+		List<StockAnalyze> List = new  ArrayList<StockAnalyze>();
+		
+		  String []title = new String[]{"付款人","付款金额","上传日期","付款时间"};//标题
+		 for (int i = 0; i < 3; i++) {
+	        
+			wb.createSheet("name"+i);
+	                Thread myThread1 = new MyThread("name"+i, wb, title, stockDao,List);     
+	               
+	                myThread1.start();
+	        }
+
+		while (1 == 1) {
+			if (List.size() == 3) {
+
+				
+				ByteArrayOutputStream os = new ByteArrayOutputStream();
+				wb.write(os);
+				
+				response.reset();
+
+				response.setContentType(
+						"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=utf-8");
+				response.setHeader("Content-Disposition",
+						"attachment;filename=" + new String((fileName).getBytes(), "iso-8859-1"));
+				response.setContentLength(os.toByteArray().length);
+				ServletOutputStream outputStream = response.getOutputStream();
+				wb.write(outputStream);
+
+				System.out.println(
+						"----------------------------------------------------------1111111111111111111111111111111111111111111111111");
+				outputStream.flush();
+				System.out.println(
+						"----------------------------------------------------------22222222222222222222222222222222222222222222222222222");
+				outputStream.close();
+				System.out.println(
+						"----------------------------------------------------------3333333333333333333333333333333333333333333333333333333");
+				os.flush();
+				System.out.println(
+						"---------------------------------------------------------444444444444444444444444444444444444444444444444444444444444");
+				os.close();
+				System.out.println(
+						"----------------------------------------------------------55555555555555555555555555555555555555555555555555555555");
+				return null;
+			}
+			Thread.sleep(1000);
+		}
+	}
+	
+	
 	
 }

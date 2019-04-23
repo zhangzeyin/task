@@ -1,7 +1,8 @@
 package com.example.demo.entity;
 
-public class User 
+public  class User 
 //implements Serializable, UserDetails 
+<Object>
 {
     private Integer id;
 
@@ -43,5 +44,4 @@ public class User
         this.age = age;
     }
 
-	
 }

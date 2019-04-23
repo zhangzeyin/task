@@ -65,5 +65,13 @@
 
 	</select>
 	
+		
+	<select id="findAll" resultMap="resultMap" >
+	
+	select stock_name stockName,
+						closing_quotation avg,
+						closing_quotation max,
+						closing_quotation min from stock
+	</select>
 	
 </mapper>
